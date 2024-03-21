@@ -3,7 +3,7 @@ const middleware = require("../middleware")
 
 const signUp = async (req, res) => {
   try {
-    const { email, password, name } = req.body
+    const { email, password, name, avatar, phone } = req.body
     let passwordDigest = await middleware.hashPassword(password)
     let existingUser = await User.findOne({ email })
     if (existingUser) {
@@ -15,7 +15,8 @@ const signUp = async (req, res) => {
         name,
         email,
         password: passwordDigest,
-        // role,
+        phone,
+        avatar,
       })
       res.send(user)
     }
@@ -40,7 +41,8 @@ const signIn = async (req, res) => {
 
       return res.send({ user: payload, token })
     }
-    res.status(401).send({ status: "Error", msg: "Unauthorized" })
+    res.json({ error: "Your email and/or password do not match" })
+    // res.status(401).send({ status: "Error", msg: "Unauthorized" })
   } catch (error) {
     console.log(error)
     res

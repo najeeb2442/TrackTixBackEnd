@@ -4,12 +4,15 @@ const Schema = mongoose.Schema
 const userSchema = new Schema(
   {
     name: { type: String, required: true },
-    image: [{ type: String }],
-    password: { type: String, required: true },
     email: { type: String, required: true },
-    // role: { type: String, required: true },
-    // tickets: [{ type: Schema.Types.ObjectId, ref: "Ticket" }],
-    // stadiums: [{ type: Schema.Types.ObjectId, ref: "Stadium" }],
+    password: { type: String, required: true },
+    phone: { type: String, default: "No Number Provider" },
+    avatar: { type: String, default: "./images/20240222_142814" },
+    roles: [{ type: Schema.Types.ObjectId, ref: "Role" }],
+    tickets: [{ type: Schema.Types.ObjectId, ref: "Ticket" }],
+    teams: [{ type: Schema.Types.ObjectId, ref: "Team" }],
+    invitions: [{ type: Schema.Types.ObjectId, ref: "Invite" }],
+    notifications: [{ type: Schema.Types.ObjectId, ref: "Notification" }],
   },
   {
     timestamps: true,
