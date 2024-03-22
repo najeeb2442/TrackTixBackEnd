@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require("mongoose")
+const Schema = mongoose.Schema
 
 const ticketSchema = new Schema(
   {
@@ -10,12 +10,13 @@ const ticketSchema = new Schema(
     status: { type: String, required: true }, //enum: ["pending"] and other words
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
     solvedBy: { type: Schema.Types.ObjectId, ref: "User" },
-    comments: [{ type: String }],
+    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
     attachments: [{ type: String }],
+    logs: [{ type: Object }],
   },
   {
     timestamps: true,
   }
-);
+)
 
-module.exports = mongoose.model("Ticket", ticketSchema);
+module.exports = mongoose.model("Ticket", ticketSchema)

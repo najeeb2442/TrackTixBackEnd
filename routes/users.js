@@ -1,18 +1,45 @@
-var express = require("express");
-var router = express.Router();
-const middleware = require("../middleware");
+var express = require("express")
+var router = express.Router()
+const middleware = require("../middleware")
 
-const usersController = require("../controllers/users");
+const usersController = require("../controllers/users")
 
 // get all users
-router.get("/", usersController.index);
+router.get(
+  "/",
+  middleware.stripToken,
+  middleware.verifyToken,
+  usersController.index
+)
 // send user
-router.get("/:id", usersController.show);
+router.get(
+  "/:id",
+  middleware.stripToken,
+  middleware.verifyToken,
+  usersController.show
+)
 // update user
-router.put("/:id", usersController.updateUser);
-// create a user
-// router.post("/", usersController.newUser);
-// delete a user
-router.delete("/:id", usersController.deleteUser);
+router.put(
+  "/:id",
+  middleware.stripToken,
+  middleware.verifyToken,
+  usersController.updateUser
+)
 
-module.exports = router;
+// create a user
+// router.post(
+//   "/",
+//   middleware.stripToken,
+//   middleware.verifyToken,
+//   usersController.newUser
+// );
+
+// delete a user
+router.delete(
+  "/:id",
+  middleware.stripToken,
+  middleware.verifyToken,
+  usersController.deleteUser
+)
+
+module.exports = router

@@ -1,19 +1,19 @@
-const User = require("../models/user");
-const Role = require("../models/role");
-const Ticket = require("../models/ticket");
-const Team = require("../models/team");
-const Invite = require("../models/invite");
-const Notification = require("../models/notification");
+const User = require("../models/user")
+const Role = require("../models/role")
+const Ticket = require("../models/ticket")
+const Team = require("../models/team")
+const Invite = require("../models/invite")
+const Notification = require("../models/notification")
 
 const index = async (req, res) => {
   //done
   try {
-    let users = await User.find();
-    res.json(users);
+    let users = await User.find()
+    res.json(users)
   } catch (err) {
-    res.json({ error: err.message });
+    res.json({ error: err.message })
   }
-};
+}
 
 const show = async (req, res) => {
   // done
@@ -128,6 +128,11 @@ const show = async (req, res) => {
               path: "solvedBy",
               model: "User",
             },
+            {
+              path: "comments",
+              model: "Comment",
+              populate: { path: "member", model: "User" },
+            },
           ],
         },
         {
@@ -174,13 +179,13 @@ const show = async (req, res) => {
           ],
         },
       ])
-      .exec();
+      .exec()
 
-    res.json(user);
+    res.json(user)
   } catch (err) {
-    res.json({ error: err.message });
+    res.json({ error: err.message })
   }
-};
+}
 
 // const newUser = async (req, res) => {
 //   //done
@@ -194,21 +199,21 @@ const show = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    let user = await User.updateOne({ _id: req.params.id }, req.body);
-    res.json(user);
+    let user = await User.updateOne({ _id: req.params.id }, req.body)
+    res.json(user)
   } catch (err) {
-    res.json({ error: err.message });
+    res.json({ error: err.message })
   }
-};
+}
 
 const deleteUser = async (req, res) => {
   try {
-    await User.deleteOne({ _id: req.params.id }).exec();
-    res.json(true);
+    await User.deleteOne({ _id: req.params.id }).exec()
+    res.json(true)
   } catch (err) {
-    res.json({ error: err.message });
+    res.json({ error: err.message })
   }
-};
+}
 
 module.exports = {
   deleteUser,
@@ -216,4 +221,4 @@ module.exports = {
   // newUser,
   index,
   show,
-};
+}
