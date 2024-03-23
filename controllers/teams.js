@@ -9,6 +9,8 @@ const createTeam = async (req, res) => {
     const user = await User.findById(req.body.manager)
     user.teams.push(team._id)
     user.roles.push(role.id)
+    team.members.push(req.body.manager)
+    team.save()
     user.save()
     res.send('Team Created')
   } catch (error) {
