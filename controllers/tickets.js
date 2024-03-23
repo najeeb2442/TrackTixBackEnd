@@ -8,31 +8,54 @@ const index = async (req, res) => {
   try {
     //   .populate(["member", "createdBy", "solvedBy"]);
 
-    let tickets = await Ticket.find({ _id: req.params.id }).populate([
-      {
-        path: "member",
-        model: "User",
-      },
-      {
-        path: "createdBy",
-        model: "User",
-      },
-      {
-        path: "solvedBy",
-        model: "User",
-      },
-      // {
-      //   path: "logs",
-      //   model: "User",
-      //   populate:{}
-      // },
-      {
-        path: "comments",
-        model: "Comment",
-        populate: { path: "member", model: "User" },
-      },
-    ])
-    res.json(tickets)
+    // let tickets = await Ticket.find({ _id: req.params.id }).populate([
+    //   {
+    //     path: "member",
+    //     model: "User",
+    //   },
+    //   {
+    //     path: "createdBy",
+    //     model: "User",
+    //   },
+    //   {
+    //     path: "solvedBy",
+    //     model: "User",
+    //   },
+    //   // {
+    //   //   path: "logs",
+    //   //   model: "User",
+    //   //   populate:{}
+    //   // },
+    //   {
+    //     path: "comments",
+    //     model: "Comment",
+    //     populate: { path: "member", model: "User" },
+    //   },
+    // ])
+
+    let teams = await Team.find({ _id: req.params.id }).populate({
+      path: "tickets",
+      populate: [
+        {
+          path: "member",
+          model: "User",
+        },
+        {
+          path: "createdBy",
+          model: "User",
+        },
+        {
+          path: "solvedBy",
+          model: "User",
+        },
+        {
+          path: "comments",
+          model: "Comment",
+          populate: { path: "member", model: "User" },
+        },
+      ],
+    })
+    res.json(teams.tickets)
   } catch (err) {
     res.json({ error: err.message })
   }

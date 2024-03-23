@@ -15,6 +15,28 @@ const index = async (req, res) => {
       {
         path: 'members',
         model: 'User'
+      },
+      {
+        path: 'tickets',
+        populate: [
+          {
+            path: 'member',
+            model: 'User'
+          },
+          {
+            path: 'createdBy',
+            model: 'User'
+          },
+          {
+            path: 'solvedBy',
+            model: 'User'
+          },
+          {
+            path: 'comments',
+            model: 'Comment',
+            populate: { path: 'member', model: 'User' }
+          }
+        ]
       }
     ])
     res.json(teams)
