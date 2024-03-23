@@ -43,19 +43,24 @@ const show = async (req, res) => {
 }
 
 // i am here right now
+// sender email team
 
 const newInvite = async (req, res) => {
   //done
   try {
-    const invite = await Invite.create(req.body)
-    // const
-    await User.updateOne(
-      { _id: req.body.member },
-      { $push: { invites: invite._id } }
-    )
-    res.send("Invite Created")
+    const user = await User.findOne({ email: req.body.member })
 
-    // res.json(newInvite)
+    if (user) {
+      req.body.member = user._id
+      const invite = await Invite.create(req.body)
+      // const
+      await User.updateOne(
+        { _id: req.body.member },
+        { $push: { invites: invite._id } }
+      )
+      res.send("Invite Created")
+    }
+    res.json("email not found")
   } catch (err) {
     res.json({ error: err.message })
   }
@@ -74,7 +79,7 @@ const updateInvite = async (req, res) => {
     }
     await User.updateOne(
       { _id: invite.member },
-      { $pull: { invitions: invite._id } }
+      { $pull: { invites: invite._id } }
     )
     await Invite.deleteOne({ _id: req.params.id })
     res.json("updated")

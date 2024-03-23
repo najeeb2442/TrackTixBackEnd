@@ -73,7 +73,7 @@ const show = async (req, res) => {
     //     ],
     //   })
     //   .populate({
-    //     path: "invitions",
+    //     path: "invites",
     //     populate: [
     //       {
     //         path: "sender",
@@ -149,7 +149,7 @@ const show = async (req, res) => {
           ],
         },
         {
-          path: "invitions",
+          path: "invites",
           populate: [
             {
               path: "sender",
