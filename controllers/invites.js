@@ -7,7 +7,7 @@ const index = async (req, res) => {
   //done
   try {
     // .populate(["member", "createdBy", "solvedBy"]);
-    let invites = await Invite.find({ _id: req.params.id }).populate([
+    let invites = await Invite.find({ member: req.params.id }).populate([
       {
         path: 'sender',
         model: 'User'
