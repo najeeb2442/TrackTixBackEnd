@@ -215,10 +215,21 @@ const deleteUser = async (req, res) => {
   }
 }
 
+const getTeams = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).populate("teams")
+    const teams = user.teams
+    res.send(teams)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   deleteUser,
   updateUser,
   // newUser,
   index,
   show,
+  getTeams,
 }
