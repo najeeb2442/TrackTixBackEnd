@@ -58,9 +58,9 @@ const newInvite = async (req, res) => {
         { _id: req.body.member },
         { $push: { invites: invite._id } }
       )
-      res.send('Invite Created')
+      res.send('Invite Sent')
     } else {
-      res.json('email not found')
+      res.json('Email Not Found')
     }
   } catch (err) {
     res.json({ error: err.message })

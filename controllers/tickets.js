@@ -1,5 +1,7 @@
 const Ticket = require("../models/ticket")
 const User = require("../models/user")
+const Team = require("../models/team")
+const Notification = require("../models/notification")
 
 const index = async (req, res) => {
   //done
@@ -53,12 +55,12 @@ const show = async (req, res) => {
 const newTicket = async (req, res) => {
   //done
   try {
-    let newTicket = await Ticket.create(req.body, { logs: req.body })
-    // await User.updateOne(
-    //   { _id: req.body.user },
-    //   { $push: { tickets: newTicket._id } }
-    // )
-    // newTicket = await Ticket.updateOne({ _id: newTicket._id },{ logs: req.body } )
+    let newTicket = await Ticket.create({ ...req.body, logs: req.body })
+
+    await Team.updateOne(
+      { _id: req.params.id },
+      { $push: { tickets: newTicket._id } }
+    )
 
     res.json(newTicket)
   } catch (err) {
@@ -71,6 +73,10 @@ const updateTicket = async (req, res) => {
     // req.body.status = true
     let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
     ticket = await Ticket.updateOne({ _id: req.params.id }, { logs: req.body })
+
+    // const note = { content: "", member: req.body.member, ticket: "" }
+
+    // const notification = await Notification.create()
 
     res.json(ticket)
   } catch (err) {
