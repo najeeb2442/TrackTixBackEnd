@@ -43,13 +43,14 @@ const show = async (req, res) => {
 }
 
 // i am here right now
+// sender email team
 
 const newInvite = async (req, res) => {
   //done
   try {
-    const user = await User.find({ email: req.body.member })
+    const user = await User.findOne({ email: req.body.member })
 
-    if (!!user) {
+    if (user) {
       req.body.member = user._id
       const invite = await Invite.create(req.body)
       // const
@@ -78,7 +79,7 @@ const updateInvite = async (req, res) => {
     }
     await User.updateOne(
       { _id: invite.member },
-      { $pull: { invitions: invite._id } }
+      { $pull: { invites: invite._id } }
     )
     await Invite.deleteOne({ _id: req.params.id })
     res.json('updated')
