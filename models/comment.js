@@ -1,7 +1,7 @@
-const mongoose = require("mongoose")
-const Schema = mongoose.Schema
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-const userSchema = new Schema(
+const commentSchema = new Schema(
   {
     content: { type: String, required: true },
     member: { type: Schema.Types.ObjectId, ref: "User", required: true },
@@ -9,6 +9,6 @@ const userSchema = new Schema(
   {
     timestamps: true,
   }
-)
+);
 
-module.exports = mongoose.model("Comment", userSchema)
+module.exports = mongoose.model("Comment", commentSchema);

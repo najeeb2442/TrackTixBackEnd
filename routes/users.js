@@ -1,14 +1,47 @@
-var express = require('express')
+var express = require("express")
 var router = express.Router()
-const usersController = require('../controllers/users')
+const middleware = require("../middleware")
 
-/* GET users listing. */
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
+const usersController = require("../controllers/users")
 
-router.get('/:id/teams', usersController.getTeams)
+// get all users
+router.get(
+  "/",
+  middleware.stripToken,
+  middleware.verifyToken,
+  usersController.index
+)
+// send user
+router.get(
+  "/:id",
+  middleware.stripToken,
+  middleware.verifyToken,
+  usersController.show
+)
+// update user
+router.put(
+  "/:id",
+  middleware.stripToken,
+  middleware.verifyToken,
+  usersController.updateUser
+)
+
+router.get("/:id/teams", usersController.getTeams)
 // create a user
-router.post('/', usersController.newUser)
+
+// router.post(
+//   "/",
+//   middleware.stripToken,
+//   middleware.verifyToken,
+//   usersController.newUser
+// );
+
+// delete a user
+router.delete(
+  "/:id",
+  middleware.stripToken,
+  middleware.verifyToken,
+  usersController.deleteUser
+)
 
 module.exports = router
