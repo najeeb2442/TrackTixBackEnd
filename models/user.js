@@ -11,7 +11,7 @@ const userSchema = new Schema(
     roles: [{ type: Schema.Types.ObjectId, ref: "Role" }],
     tickets: [{ type: Schema.Types.ObjectId, ref: "Ticket" }],
     teams: [{ type: Schema.Types.ObjectId, ref: "Team" }],
-    invitions: [{ type: Schema.Types.ObjectId, ref: "Invite" }],
+    invites: [{ type: Schema.Types.ObjectId, ref: "Invite" }],
     notifications: [{ type: Schema.Types.ObjectId, ref: "Notification" }],
   },
   {

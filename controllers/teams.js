@@ -27,17 +27,16 @@ const show = async (req, res) => {
   // done
   try {
     const team = await Team.findById(req.params.id)
-      .populate(["manager", "members"])
-      .populate(
-        {
-          path: "members.roles",
-          model: "Role",
+      .populate(["manager"])
+      .populate({
+        path: "members",
+        populate: {
+          path: "roles",
+          populate: {
+            path: "team",
+          },
         },
-        {
-          path: "members.roles.team",
-          model: "Team",
-        }
-      )
+      })
 
     res.json(team)
   } catch (err) {
