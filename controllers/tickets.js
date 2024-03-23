@@ -34,7 +34,7 @@ const index = async (req, res) => {
     //   },
     // ])
 
-    let teams = await Team.find({ _id: req.params.id }).populate({
+    let teams = await Team.findOne({ _id: req.params.id }).populate({
       path: 'tickets',
       populate: [
         {
@@ -56,6 +56,7 @@ const index = async (req, res) => {
         }
       ]
     })
+    // console.log("ee")
     res.json(teams.tickets)
   } catch (err) {
     res.json({ error: err.message })
