@@ -1,7 +1,8 @@
-const Ticket = require("../models/ticket")
-const User = require("../models/user")
-const Team = require("../models/team")
-const Notification = require("../models/notification")
+const Ticket = require('../models/ticket')
+const User = require('../models/user')
+const Team = require('../models/team')
+const Notification = require('../models/notification')
+const Comment = require('../models/comment')
 
 const index = async (req, res) => {
   //done
@@ -34,26 +35,26 @@ const index = async (req, res) => {
     // ])
 
     let teams = await Team.find({ _id: req.params.id }).populate({
-      path: "tickets",
+      path: 'tickets',
       populate: [
         {
-          path: "member",
-          model: "User",
+          path: 'member',
+          model: 'User'
         },
         {
-          path: "createdBy",
-          model: "User",
+          path: 'createdBy',
+          model: 'User'
         },
         {
-          path: "solvedBy",
-          model: "User",
+          path: 'solvedBy',
+          model: 'User'
         },
         {
-          path: "comments",
-          model: "Comment",
-          populate: { path: "member", model: "User" },
-        },
-      ],
+          path: 'comments',
+          model: 'Comment',
+          populate: { path: 'member', model: 'User' }
+        }
+      ]
     })
     res.json(teams.tickets)
   } catch (err) {
@@ -65,8 +66,8 @@ const show = async (req, res) => {
   // done
   try {
     const ticket = await Ticket.findById(req.params.id)
-      .populate(["member", "createdBy", "solvedBy", "comments"])
-      .populate({ path: "comments.member", model: "User" })
+      .populate(['member', 'createdBy', 'solvedBy', 'comments'])
+      .populate({ path: 'comments.member', model: 'User' })
     res.json(ticket)
   } catch (err) {
     res.json({ error: err.message })
@@ -128,5 +129,5 @@ module.exports = {
   updateTicket,
   newTicket,
   index,
-  show,
+  show
 }
