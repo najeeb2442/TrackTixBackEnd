@@ -12,7 +12,7 @@ const usersRouter = require("./routes/users")
 const AuthRouter = require("./routes/Auth")
 const ticketsRouter = require("./routes/tickets")
 const teamsRouter = require("./routes/teams")
-// const rolesRouter = require("./routes/roles");
+const rolesRouter = require("./routes/roles")
 // const notificationsRouter = require("./routes/notifications");
 const invitesRouter = require("./routes/invites")
 
@@ -33,7 +33,7 @@ app.use("/users", usersRouter)
 app.use("/auth", AuthRouter)
 app.use("/tickets", ticketsRouter)
 app.use("/teams", teamsRouter)
-// app.use("/roles", rolesRouter);
+app.use("/roles", rolesRouter)
 // app.use("/notificaions", notificationsRouter);
 app.use("/invites", invitesRouter)
 

@@ -6,8 +6,8 @@ const middleware = require("../middleware/index.js")
 //get all invites by user
 router.get(
   "/user/:id",
-  middleware.stripToken,
-  middleware.verifyToken,
+  // middleware.stripToken,
+  // middleware.verifyToken,
   invitesController.index
 )
 //get a invite
