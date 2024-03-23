@@ -1,5 +1,6 @@
 const Team = require("../models/team")
 const User = require("../models/user")
+const Role = require("../models/role.js")
 
 const index = async (req, res) => {
   //done
@@ -41,14 +42,24 @@ const show = async (req, res) => {
 const newTeam = async (req, res) => {
   //done
   try {
-    let newTeam = await Team.create(req.body)
-    await User.updateOne(
-      { _id: req.body.manager },
-      { $push: { teams: newTeam._id } }
-    )
-    newTeam = await Team.updateOne({ _id: newTeam._id })
+    const team = await Team.create(req.body)
+    const role = await Role.create({ name: "Manager", team: team._id })
+    const user = await User.findById(req.body.manager)
+    user.teams.push(team._id)
+    user.roles.push(role.id)
+    team.members.push(req.body.manager)
+    team.save()
+    user.save()
+    res.send("Team Created")
 
-    res.json(newTeam)
+    // let newTeam = await Team.create(req.body)
+    // await User.updateOne(
+    //   { _id: req.body.manager },
+    //   { $push: { teams: newTeam._id } }
+    // )
+    // newTeam = await Team.updateOne({ _id: newTeam._id })
+
+    // res.json(newTeam)
   } catch (err) {
     res.json({ error: err.message })
   }
