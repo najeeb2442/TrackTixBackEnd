@@ -59,8 +59,9 @@ const newInvite = async (req, res) => {
         { $push: { invites: invite._id } }
       )
       res.send('Invite Created')
+    } else {
+      res.json('email not found')
     }
-    res.json('email not found')
   } catch (err) {
     res.json({ error: err.message })
   }
@@ -77,7 +78,7 @@ const updateInvite = async (req, res) => {
         { $push: { teams: invite.team } }
       )
       await Team.updateOne(
-        { _id: req.body.team },
+        { _id: invite.team },
         { $push: { members: invite.member } }
       )
     }
