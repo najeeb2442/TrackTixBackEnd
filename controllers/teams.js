@@ -1,6 +1,6 @@
-const Team = require("../models/team")
-const User = require("../models/user")
-const Role = require("../models/role.js")
+const Team = require('../models/team')
+const User = require('../models/user')
+const Role = require('../models/role.js')
 
 const index = async (req, res) => {
   //done
@@ -9,13 +9,13 @@ const index = async (req, res) => {
 
     let teams = await Team.find({ _id: req.params.id }).populate([
       {
-        path: "manager",
-        model: "User",
+        path: 'manager',
+        model: 'User'
       },
       {
-        path: "members",
-        model: "User",
-      },
+        path: 'members',
+        model: 'User'
+      }
     ])
     res.json(teams)
   } catch (err) {
@@ -26,18 +26,20 @@ const index = async (req, res) => {
 const show = async (req, res) => {
   // done
   try {
-    const team = await Team.findById(req.params.id)
-      .populate(["manager", "members"])
-      .populate(
-        {
-          path: "members.roles",
-          model: "Role",
-        },
-        {
-          path: "members.roles.team",
-          model: "Team",
-        }
-      )
+    const team = await Team.findById(req.params.id).populate([
+      'manager',
+      'members'
+    ])
+    // .populate(
+    //   {
+    //     path: "members.roles",
+    //     model: "Role",
+    //   },
+    //   {
+    //     path: "members.roles.team",
+    //     model: "Team",
+    //   }
+    // )
 
     res.json(team)
   } catch (err) {
@@ -51,14 +53,14 @@ const newTeam = async (req, res) => {
   //done
   try {
     const team = await Team.create(req.body)
-    const role = await Role.create({ name: "Manager", team: team._id })
+    const role = await Role.create({ name: 'Manager', team: team._id })
     const user = await User.findById(req.body.manager)
     user.teams.push(team._id)
     user.roles.push(role.id)
     team.members.push(req.body.manager)
     team.save()
     user.save()
-    res.send("Team Created")
+    res.send('Team Created')
 
     // let newTeam = await Team.create(req.body)
     // await User.updateOne(
@@ -106,5 +108,5 @@ module.exports = {
   updateTeam,
   newTeam,
   index,
-  show,
+  show
 }

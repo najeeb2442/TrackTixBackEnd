@@ -14,7 +14,7 @@ const ticketsRouter = require('./routes/tickets')
 const teamsRouter = require('./routes/teams')
 // const rolesRouter = require("./routes/roles");
 // const notificationsRouter = require("./routes/notifications");
-// const invitesRouter = require("./routes/invites");
+const invitesRouter = require('./routes/invites')
 
 var app = express()
 
@@ -35,7 +35,7 @@ app.use('/tickets', ticketsRouter)
 app.use('/teams', teamsRouter)
 // app.use("/roles", rolesRouter);
 // app.use("/notificaions", notificationsRouter);
-// app.use("/invites", invitesRouter);
+app.use('/invites', invitesRouter)
 
 // app.listen(port, () => {
 //   console.log(`Example app listening on port ${port}`)

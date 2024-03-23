@@ -1,7 +1,7 @@
-const Invite = require("../models/invite.js")
-const Team = require("../models/team.js")
-const User = require("../models/user.js")
-const Role = require("../models/role.js")
+const Invite = require('../models/invite.js')
+const Team = require('../models/team.js')
+const User = require('../models/user.js')
+const Role = require('../models/role.js')
 
 const index = async (req, res) => {
   //done
@@ -9,17 +9,17 @@ const index = async (req, res) => {
     // .populate(["member", "createdBy", "solvedBy"]);
     let invites = await Invite.find({ _id: req.params.id }).populate([
       {
-        path: "sender",
-        model: "User",
+        path: 'sender',
+        model: 'User'
       },
       {
-        path: "member",
-        model: "User",
+        path: 'member',
+        model: 'User'
       },
       {
-        path: "team",
-        model: "Team",
-      },
+        path: 'team',
+        model: 'Team'
+      }
     ])
     res.json(invites)
   } catch (err) {
@@ -31,9 +31,9 @@ const show = async (req, res) => {
   // done
   try {
     const invite = await Invite.findById(req.params.id).populate([
-      "sender",
-      "member",
-      "team",
+      'sender',
+      'member',
+      'team'
     ])
 
     res.json(invite)
@@ -47,15 +47,19 @@ const show = async (req, res) => {
 const newInvite = async (req, res) => {
   //done
   try {
-    const invite = await Invite.create(req.body)
-    // const
-    await User.updateOne(
-      { _id: req.body.member },
-      { $push: { invites: invite._id } }
-    )
-    res.send("Invite Created")
+    const user = await User.find({ email: req.body.member })
 
-    // res.json(newInvite)
+    if (!!user) {
+      req.body.member = user._id
+      const invite = await Invite.create(req.body)
+      // const
+      await User.updateOne(
+        { _id: req.body.member },
+        { $push: { invites: invite._id } }
+      )
+      res.send('Invite Created')
+    }
+    res.json('email not found')
   } catch (err) {
     res.json({ error: err.message })
   }
@@ -77,7 +81,7 @@ const updateInvite = async (req, res) => {
       { $pull: { invitions: invite._id } }
     )
     await Invite.deleteOne({ _id: req.params.id })
-    res.json("updated")
+    res.json('updated')
   } catch (err) {
     res.json({ error: err.message })
   }
@@ -105,5 +109,5 @@ module.exports = {
   updateInvite,
   newInvite,
   index,
-  show,
+  show
 }
