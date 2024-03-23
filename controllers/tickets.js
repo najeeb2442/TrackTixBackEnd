@@ -1,4 +1,3 @@
-// const Match = require("../models/Match");
 const Ticket = require("../models/ticket")
 const User = require("../models/user")
 
@@ -40,8 +39,7 @@ const index = async (req, res) => {
 const show = async (req, res) => {
   // done
   try {
-    const ticket = await ticket
-      .findById(req.params.id)
+    const ticket = await Ticket.findById(req.params.id)
       .populate(["member", "createdBy", "solvedBy", "comments"])
       .populate({ path: "comments.member", model: "User" })
     res.json(ticket)

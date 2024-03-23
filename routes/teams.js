@@ -1,42 +1,42 @@
 var express = require("express")
 var router = express.Router()
-const ticketsController = require("../controllers/tickets")
+const teamsController = require("../controllers/teams.js")
 const middleware = require("../middleware")
 
-//send all tickets
+//send all teams
 router.get(
-  "/team/:id",
+  "/user/:id",
   middleware.stripToken,
   middleware.verifyToken,
-  ticketsController.index
+  teamsController.index
 )
-//send a ticket
+//send a team
 router.get(
   "/:id",
   middleware.stripToken,
   middleware.verifyToken,
-  ticketsController.show
+  teamsController.show
 )
-// update ticket
+// update team
 router.put(
   "/:id",
   middleware.stripToken,
   middleware.verifyToken,
-  ticketsController.updateTicket
+  teamsController.updateTeam
 )
-// create a ticket
+// create a team
 router.post(
   "/",
   middleware.stripToken,
   middleware.verifyToken,
-  ticketsController.newTicket
+  teamsController.newTeam
 )
-// delete a ticket
+// delete a team
 router.delete(
   "/:id",
   middleware.stripToken,
   middleware.verifyToken,
-  ticketsController.deleteTicket
+  teamsController.deleteTeam
 )
 
 module.exports = router
