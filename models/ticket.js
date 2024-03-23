@@ -5,7 +5,7 @@ const ticketSchema = new Schema(
   {
     subject: { type: String, required: true },
     content: { type: String, required: true },
-    member: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    member: { type: Schema.Types.ObjectId, ref: "User" },
     priority: {
       type: String,
       required: true,
@@ -15,6 +15,7 @@ const ticketSchema = new Schema(
       type: String,
       required: true,
       enum: ["Pending", "Processing", "Complete"],
+      default: "Pending",
     }, //enum: ["pending"] and other words
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
     solvedBy: { type: Schema.Types.ObjectId, ref: "User" },

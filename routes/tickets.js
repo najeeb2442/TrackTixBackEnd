@@ -26,7 +26,7 @@ router.put(
 )
 // create a ticket
 router.post(
-  "/",
+  "/team/:id",
   middleware.stripToken,
   middleware.verifyToken,
   ticketsController.newTicket
