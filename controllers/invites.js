@@ -76,6 +76,10 @@ const updateInvite = async (req, res) => {
         { _id: invite.member },
         { $push: { teams: invite.team } }
       )
+      await Team.updateOne(
+        { _id: req.body.team },
+        { $push: { members: req.body.member } }
+      )
     }
     await User.updateOne(
       { _id: invite.member },
