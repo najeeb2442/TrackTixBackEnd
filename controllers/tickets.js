@@ -82,10 +82,18 @@ const newTicket = async (req, res) => {
   try {
     let newTicket = await Ticket.create({ ...req.body, logs: req.body })
 
-    await Team.updateOne(
+    const team = await Team.updateOne(
       { _id: req.params.id },
       { $push: { tickets: newTicket._id } }
     )
+
+    const note = {
+      content: "Ticket Has Been Created.",
+      member: team.manager,
+      ticket: newTicket._id,
+    }
+
+    await Notification.create(note)
 
     res.json(newTicket)
   } catch (err) {
@@ -99,9 +107,26 @@ const updateTicket = async (req, res) => {
     let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
     ticket = await Ticket.updateOne({ _id: req.params.id }, { logs: req.body })
 
-    // const note = { content: "", member: req.body.member, ticket: "" }
+    const note = {
+      content: "Ticket Has Been updated.",
+      member: ticket.createdBy,
+      ticket: req.params.id,
+    }
 
-    // const notification = await Notification.create()
+    if (req.body.solvedBy) {
+      note = {
+        content: "Ticket Has Been Solved.",
+        member: ticket.createdBy,
+        ticket: req.params.id,
+      }
+    }
+
+    const notification = await Notification.create(note)
+
+    const team = await Team.findOne({ _id: req.query.teamId })
+
+    note.member = team.manager
+    await Notification.create(note)
 
     res.json(ticket)
   } catch (err) {
@@ -111,11 +136,13 @@ const updateTicket = async (req, res) => {
 
 const assignTicket = async (req, res) => {
   try {
-    // req.body.status = true
-    // let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
     const user = await User.updateOne(
       { _id: req.body.member },
-      { $push: { tickets: req.params._id } }
+      { $push: { tickets: req.params.id } }
+    )
+    await Ticket.updateOne(
+      { _id: req.params.id },
+      { $push: { member: req.body.member } }
     )
     res.json("ticket has been assign successfully")
   } catch (err) {
@@ -124,11 +151,13 @@ const assignTicket = async (req, res) => {
 }
 const removeTicket = async (req, res) => {
   try {
-    // req.body.status = true
-    // let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
     const user = await User.updateOne(
       { _id: req.body.member },
-      { $pull: { tickets: req.params._id } }
+      { $pull: { tickets: req.params.id } }
+    )
+    await Ticket.updateOne(
+      { _id: req.params.id },
+      { $push: { member: req.body.member } }
     )
     res.json("ticket has been removed successfully")
   } catch (err) {

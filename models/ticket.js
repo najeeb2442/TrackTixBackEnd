@@ -5,7 +5,7 @@ const ticketSchema = new Schema(
   {
     subject: { type: String, required: true },
     content: { type: String, required: true },
-    member: { type: Schema.Types.ObjectId, ref: "User" },
+    member: [{ type: Schema.Types.ObjectId, ref: "User" }],
     priority: {
       type: String,
       required: true,

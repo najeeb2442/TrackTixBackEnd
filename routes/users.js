@@ -26,6 +26,12 @@ router.put(
   usersController.updateUser
 )
 
+router.get(
+  "/:id/teams",
+  middleware.stripToken,
+  middleware.verifyToken,
+  usersController.getTeams
+)
 // create a user
 
 // router.post(
