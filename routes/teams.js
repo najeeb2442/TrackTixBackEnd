@@ -39,4 +39,20 @@ router.delete(
   teamsController.deleteTeam
 )
 
+// remove all roles from a user
+router.delete(
+  "/:id/removeroles",
+  middleware.stripToken,
+  middleware.verifyToken,
+  teamsController.removeAllRoles
+)
+
+// remove a member from a team
+router.put(
+  "/:teamId/removemember/:userId",
+  middleware.stripToken,
+  middleware.verifyToken,
+  teamsController.removeMember
+)
+
 module.exports = router

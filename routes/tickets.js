@@ -33,10 +33,10 @@ router.put(
 )
 // remove a ticket from a user
 router.put(
-  "/:id/assign",
+  "/:id/remove",
   middleware.stripToken,
   middleware.verifyToken,
-  ticketsController.removeTicket
+  ticketsController.leaveTicket
 )
 // create a ticket
 router.post(
