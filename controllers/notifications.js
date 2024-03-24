@@ -99,6 +99,10 @@ const index = async (req, res) => {
 const deleteNotification = async (req, res) => {
   try {
     await Notification.deleteOne({ _id: req.params.id }).exec()
+    await User.updateOne(
+      { _id: req.body.member },
+      { $pull: { notifications: req.params.id } }
+    )
     res.json(true)
   } catch (err) {
     res.json({ error: err.message })
@@ -106,7 +110,11 @@ const deleteNotification = async (req, res) => {
 }
 const deleteAllNotification = async (req, res) => {
   try {
-    await Notification.deleteAll({ member: req.params.id }).exec()
+    await Notification.deleteMany({ member: req.params.id }).exec()
+    await User.updateOne(
+      { _id: req.params.id },
+      { $set: { notifications: [] } }
+    )
     res.json(true)
   } catch (err) {
     res.json({ error: err.message })
