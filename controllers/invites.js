@@ -51,14 +51,23 @@ const newInvite = async (req, res) => {
     const user = await User.findOne({ email: req.body.member })
 
     if (user) {
-      req.body.member = user._id
-      const invite = await Invite.create(req.body)
-      // const
-      await User.updateOne(
-        { _id: req.body.member },
-        { $push: { invites: invite._id } }
-      )
-      res.send("Invite Sent")
+      const invite = await Invite.findOne({
+        member: user._id,
+        team: req.body.team,
+      })
+
+      if (!invite) {
+        req.body.member = user._id
+        const invite = await Invite.create(req.body)
+        // const
+        await User.updateOne(
+          { _id: req.body.member },
+          { $push: { invites: invite._id } }
+        )
+        res.send("Invite Sent")
+      } else {
+        res.send("Invite Was Already Sent")
+      }
     } else {
       res.json("Email Not Found")
     }
