@@ -24,6 +24,20 @@ router.put(
   middleware.verifyToken,
   ticketsController.updateTicket
 )
+// assign a ticket to a user
+router.put(
+  "/tickets/:id/assign",
+  middleware.stripToken,
+  middleware.verifyToken,
+  ticketsController.assignTicket
+)
+// remove a ticket from a user
+router.put(
+  "/tickets/:id/assign",
+  middleware.stripToken,
+  middleware.verifyToken,
+  ticketsController.removeTicket
+)
 // create a ticket
 router.post(
   "/team/:id",
