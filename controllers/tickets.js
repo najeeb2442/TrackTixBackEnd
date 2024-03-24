@@ -100,9 +100,17 @@ const updateTicket = async (req, res) => {
     ticket = await Ticket.updateOne({ _id: req.params.id }, { logs: req.body })
 
     const note = {
-      content: "Ticket has been updated.",
+      content: "Ticket Has Been updated.",
       member: ticket.createdBy,
       ticket: req.params.id,
+    }
+
+    if (req.body.solvedBy) {
+      const note = {
+        content: "Ticket Has Been Solved.",
+        member: ticket.createdBy,
+        ticket: req.params.id,
+      }
     }
 
     const notification = await Notification.create(note)

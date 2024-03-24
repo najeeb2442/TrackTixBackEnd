@@ -100,11 +100,20 @@ const deleteNotification = async (req, res) => {
     res.json({ error: err.message })
   }
 }
+const deleteAllNotification = async (req, res) => {
+  try {
+    await Notification.deleteAll({ member: req.params.id }).exec()
+    res.json(true)
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+}
 
 module.exports = {
   deleteNotification,
   // updateNotification,
   // newNotification,
+  deleteAllNotification,
   index,
   // show,
 }
