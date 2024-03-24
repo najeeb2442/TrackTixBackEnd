@@ -109,6 +109,33 @@ const updateTicket = async (req, res) => {
   }
 }
 
+const assignTicket = async (req, res) => {
+  try {
+    // req.body.status = true
+    // let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
+    const user = await User.updateOne(
+      { _id: req.body.member },
+      { $push: { tickets: req.params._id } }
+    )
+    res.json("ticket has been assign successfully")
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+}
+const removeTicket = async (req, res) => {
+  try {
+    // req.body.status = true
+    // let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
+    const user = await User.updateOne(
+      { _id: req.body.member },
+      { $pull: { tickets: req.params._id } }
+    )
+    res.json("ticket has been removed successfully")
+  } catch (err) {
+    res.json({ error: err.message })
+  }
+}
+
 const deleteTicket = async (req, res) => {
   try {
     // if (res.locals.payload) {
@@ -129,6 +156,8 @@ module.exports = {
   deleteTicket,
   updateTicket,
   newTicket,
+  assignTicket,
+  removeTicket,
   index,
   show,
 }

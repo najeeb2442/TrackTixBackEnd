@@ -26,7 +26,6 @@ router.put(
   usersController.updateUser
 )
 
-router.get("/:id/teams", usersController.getTeams)
 // create a user
 
 // router.post(

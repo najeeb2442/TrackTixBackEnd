@@ -33,12 +33,18 @@ router.post(
 )
 // assign a user a Role
 router.put(
-  "/user/:id",
+  "/user/:id/assign",
   middleware.stripToken,
   middleware.verifyToken,
   rolesController.assignRole
 )
-
+// remove a Role from a user
+router.put(
+  "/user/:id/remove",
+  middleware.stripToken,
+  middleware.verifyToken,
+  rolesController.removeRole
+)
 // delete a role
 router.delete(
   "/:id",
