@@ -1,26 +1,26 @@
-var express = require("express")
+var express = require('express')
 var router = express.Router()
-const middleware = require("../middleware")
+const middleware = require('../middleware')
 
-const usersController = require("../controllers/users")
+const usersController = require('../controllers/users')
 
 // get all users
 router.get(
-  "/",
+  '/',
   middleware.stripToken,
   middleware.verifyToken,
   usersController.index
 )
 // send user
 router.get(
-  "/:id",
+  '/:id',
   middleware.stripToken,
   middleware.verifyToken,
   usersController.show
 )
 // update user
 router.put(
-  "/:id",
+  '/:id',
   middleware.stripToken,
   middleware.verifyToken,
   usersController.updateUser
@@ -37,10 +37,17 @@ router.put(
 
 // delete a user
 router.delete(
-  "/:id",
+  '/:id',
   middleware.stripToken,
   middleware.verifyToken,
   usersController.deleteUser
+)
+
+router.get(
+  '/:id/teams',
+  middleware.stripToken,
+  middleware.verifyToken,
+  usersController.getTeams
 )
 
 module.exports = router
