@@ -47,4 +47,12 @@ router.delete(
   notificationsController.deleteNotification
 )
 
+// delete a notification
+router.delete(
+  "/user/:id",
+  middleware.stripToken,
+  middleware.verifyToken,
+  notificationsController.deleteAllNotification
+)
+
 module.exports = router
