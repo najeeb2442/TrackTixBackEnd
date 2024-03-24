@@ -88,7 +88,7 @@ const newTicket = async (req, res) => {
     )
 
     const note = {
-      content: "Ticket Has Been Created.",
+      content: `${team.name}: ${newTicket.subject} Has Been Created.`,
       member: team.manager,
       ticket: newTicket._id,
     }
@@ -104,26 +104,25 @@ const newTicket = async (req, res) => {
 const updateTicket = async (req, res) => {
   try {
     // req.body.status = true
-    let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
-    ticket = await Ticket.updateOne({ _id: req.params.id }, { logs: req.body })
+    let ticket = await Ticket.findByIdAndUpdate({ ...req.body, logs: req.body })
+    // ticket = await Ticket.findByIdAndUpdate(req.params.id, { logs: req.body })
+    const team = await Team.findOne({ _id: req.query.teamId })
 
     const note = {
-      content: "Ticket Has Been updated.",
+      content: `${team.name}: ${ticket.subject} Has Been Updated.`,
       member: ticket.createdBy,
       ticket: req.params.id,
     }
 
     if (req.body.solvedBy) {
       note = {
-        content: "Ticket Has Been Solved.",
+        content: `${team.name}: ${ticket.subject} Has Been Solved.`,
         member: ticket.createdBy,
         ticket: req.params.id,
       }
     }
 
     const notification = await Notification.create(note)
-
-    const team = await Team.findOne({ _id: req.query.teamId })
 
     note.member = team.manager
     await Notification.create(note)
