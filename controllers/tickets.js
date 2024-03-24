@@ -82,10 +82,18 @@ const newTicket = async (req, res) => {
   try {
     let newTicket = await Ticket.create({ ...req.body, logs: req.body })
 
-    await Team.updateOne(
+    const team = await Team.updateOne(
       { _id: req.params.id },
       { $push: { tickets: newTicket._id } }
     )
+
+    const note = {
+      content: "Ticket Has Been Created.",
+      member: team.manager,
+      ticket: newTicket._id,
+    }
+
+    await Notification.create(note)
 
     res.json(newTicket)
   } catch (err) {
@@ -106,7 +114,7 @@ const updateTicket = async (req, res) => {
     }
 
     if (req.body.solvedBy) {
-      const note = {
+      note = {
         content: "Ticket Has Been Solved.",
         member: ticket.createdBy,
         ticket: req.params.id,
@@ -114,6 +122,11 @@ const updateTicket = async (req, res) => {
     }
 
     const notification = await Notification.create(note)
+
+    const team = await Team.findOne({ _id: req.query.teamId })
+
+    note.member = team.manager
+    await Notification.create(note)
 
     res.json(ticket)
   } catch (err) {
