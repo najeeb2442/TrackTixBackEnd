@@ -17,6 +17,10 @@ const index = async (req, res) => {
         path: "ticket",
         model: "Ticket",
       },
+      {
+        path: "team",
+        model: "Team",
+      },
     ])
     res.json(notifications)
   } catch (err) {

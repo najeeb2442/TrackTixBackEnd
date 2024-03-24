@@ -97,6 +97,7 @@ const newTicket = async (req, res) => {
       content: `${team.name}: ${newTicket.subject} Has Been Created.`,
       member: team.manager,
       ticket: newTicket._id,
+      team: req.params.id,
     }
     const t = await Notification.create(note)
     res.json(newTicket)
@@ -119,6 +120,7 @@ const updateTicket = async (req, res) => {
       content: `${team.name}: ${ticket.subject} Has Been Updated.`,
       member: ticket.createdBy,
       ticket: req.params.id,
+      team: team._id,
     }
 
     if (req.body.solvedBy) {
@@ -126,6 +128,7 @@ const updateTicket = async (req, res) => {
         content: `${team.name}: ${ticket.subject} Has Been Solved.`,
         member: ticket.createdBy,
         ticket: req.params.id,
+        team: team._id,
       }
     }
 
