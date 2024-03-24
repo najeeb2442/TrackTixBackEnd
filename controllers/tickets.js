@@ -98,7 +98,6 @@ const updateTicket = async (req, res) => {
     // req.body.status = true
     let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
     ticket = await Ticket.updateOne({ _id: req.params.id }, { logs: req.body })
-
     // const note = { content: "", member: req.body.member, ticket: "" }
 
     // const notification = await Notification.create()
@@ -111,11 +110,13 @@ const updateTicket = async (req, res) => {
 
 const assignTicket = async (req, res) => {
   try {
-    // req.body.status = true
-    // let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
     const user = await User.updateOne(
       { _id: req.body.member },
-      { $push: { tickets: req.params._id } }
+      { $push: { tickets: req.params.id } }
+    )
+    await Ticket.updateOne(
+      { _id: req.params.id },
+      { $push: { member: req.body.member } }
     )
     res.json("ticket has been assign successfully")
   } catch (err) {
@@ -124,11 +125,13 @@ const assignTicket = async (req, res) => {
 }
 const removeTicket = async (req, res) => {
   try {
-    // req.body.status = true
-    // let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
     const user = await User.updateOne(
       { _id: req.body.member },
-      { $pull: { tickets: req.params._id } }
+      { $pull: { tickets: req.params.id } }
+    )
+    await Ticket.updateOne(
+      { _id: req.params.id },
+      { $push: { member: req.body.member } }
     )
     res.json("ticket has been removed successfully")
   } catch (err) {

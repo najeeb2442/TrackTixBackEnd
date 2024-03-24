@@ -26,14 +26,14 @@ router.put(
 )
 // assign a ticket to a user
 router.put(
-  "/tickets/:id/assign",
+  "/:id/assign",
   middleware.stripToken,
   middleware.verifyToken,
   ticketsController.assignTicket
 )
 // remove a ticket from a user
 router.put(
-  "/tickets/:id/assign",
+  "/:id/assign",
   middleware.stripToken,
   middleware.verifyToken,
   ticketsController.removeTicket
