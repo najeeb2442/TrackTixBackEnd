@@ -98,9 +98,14 @@ const updateTicket = async (req, res) => {
     // req.body.status = true
     let ticket = await Ticket.updateOne({ _id: req.params.id }, req.body)
     ticket = await Ticket.updateOne({ _id: req.params.id }, { logs: req.body })
-    // const note = { content: "", member: req.body.member, ticket: "" }
 
-    // const notification = await Notification.create()
+    const note = {
+      content: "Ticket has been updated.",
+      member: ticket.createdBy,
+      ticket: req.params.id,
+    }
+
+    const notification = await Notification.create(note)
 
     res.json(ticket)
   } catch (err) {
