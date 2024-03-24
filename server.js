@@ -34,7 +34,7 @@ app.use('/auth', AuthRouter)
 app.use('/tickets', ticketsRouter)
 app.use('/teams', teamsRouter)
 app.use('/roles', rolesRouter)
-app.use('/notification', notificationsRouter)
+app.use('/notifications', notificationsRouter)
 app.use('/invites', invitesRouter)
 
 // app.listen(port, () => {
