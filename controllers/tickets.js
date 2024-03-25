@@ -101,11 +101,14 @@ const newTicket = async (req, res) => {
 const updateTicket = async (req, res) => {
   try {
     // req.body.status = true
-    let ticket = await Ticket.findByIdAndUpdate({ ...req.body, logs: req.body })
+    let ticket = await Ticket.findByIdAndUpdate(req.params.id, {
+      ...req.body,
+      logs: req.body
+    })
     // ticket = await Ticket.findByIdAndUpdate(req.params.id, { logs: req.body })
     const team = await Team.findOne({ _id: req.query.teamId })
 
-    const note = {
+    let note = {
       content: `${team.name}: ${ticket.subject} Has Been Updated.`,
       member: ticket.createdBy,
       ticket: req.params.id
@@ -153,7 +156,7 @@ const removeTicket = async (req, res) => {
     )
     await Ticket.updateOne(
       { _id: req.params.id },
-      { $push: { member: req.body.member } }
+      { $pull: { member: req.body.member } }
     )
     res.json('ticket has been removed successfully')
   } catch (err) {
