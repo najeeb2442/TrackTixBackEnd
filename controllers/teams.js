@@ -127,12 +127,9 @@ const deleteTeam = async (req, res) => {
 //   "/:id/removeroles/:userId,",
 const removeAllRoles = async (req, res) => {
   try {
-    console.log(req.params)
-
     const user = await User.findOne({ _id: req.params.userId }).populate(
       "roles"
     )
-    // const team = await Team.findOne({ _id: req.params.id })
 
     let userRoles = []
     user.roles.forEach((element) => {
@@ -141,20 +138,12 @@ const removeAllRoles = async (req, res) => {
       }
     })
 
-    console.log(userRoles)
-
     await User.findOneAndUpdate(
       { _id: req.params.userId },
       { $pull: { roles: { $in: userRoles } } }
     )
-
-    // { $in: team.tickets }
-
-    // user.roles.forEach(async (element) => {
     await Role.deleteMany({ _id: { $in: userRoles } }).exec()
-    // console.log(element)
-    // })
-    // await Role.deleteOne({ _id: req.params.userId }).exec()
+
     res.json(true)
   } catch (err) {
     console.log(err.message)
