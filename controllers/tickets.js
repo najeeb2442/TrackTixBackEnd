@@ -196,6 +196,19 @@ const deleteTicket = async (req, res) => {
   }
 }
 
+const addComment = async (req, res) => {
+  try {
+    const comment = new Comment({ ...req.body })
+    comment.save()
+    const ticket = await Ticket.findById(req.params.id)
+    ticket.comments.push(comment._id)
+    ticket.save()
+    res.send(ticket)
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   deleteTicket,
   updateTicket,
@@ -203,5 +216,6 @@ module.exports = {
   assignTicket,
   leaveTicket,
   index,
-  show
+  show,
+  addComment
 }

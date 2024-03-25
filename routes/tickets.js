@@ -52,5 +52,7 @@ router.delete(
   middleware.verifyToken,
   ticketsController.deleteTicket
 )
+//add comment
+router.post('/:id/comments', ticketsController.addComment)
 
 module.exports = router
