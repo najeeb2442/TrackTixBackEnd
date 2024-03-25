@@ -23,6 +23,7 @@ const ticketSchema = new Schema(
     attachments: [{ type: String }],
     due: { type: Date },
     logs: [{ type: Object }],
+    team: { type: Schema.Types.ObjectId, ref: "Team" },
   },
   {
     timestamps: true,

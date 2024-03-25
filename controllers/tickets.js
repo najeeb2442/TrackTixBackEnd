@@ -172,7 +172,6 @@ const assignTicket = async (req, res) => {
         $push: { logs: { timestamp: new Date(), status: "Processing" } },
       }
     )
-
     res.json("ticket has been assign successfully")
   } catch (err) {
     console.log(err.message)

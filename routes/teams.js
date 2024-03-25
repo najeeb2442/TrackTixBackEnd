@@ -41,7 +41,7 @@ router.delete(
 
 // remove all roles from a user
 router.delete(
-  "/:id/removeroles",
+  "/:id/removeroles/:userId",
   middleware.stripToken,
   middleware.verifyToken,
   teamsController.removeAllRoles

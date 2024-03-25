@@ -2,6 +2,7 @@ const Team = require("../models/team")
 const User = require("../models/user")
 const Role = require("../models/role.js")
 const Ticket = require("../models/ticket.js")
+const team = require("../models/team")
 
 const index = async (req, res) => {
   //done
@@ -123,21 +124,29 @@ const deleteTeam = async (req, res) => {
   }
 }
 
+//   "/:id/removeroles/:userId,",
 const removeAllRoles = async (req, res) => {
   try {
-    const user = await User.findOne({ _id: req.body.member })
-    await User.findOneAndUpdate(
-      { _id: req.body.member },
-      { $set: { roles: [] } }
+    const user = await User.findOne({ _id: req.params.userId }).populate(
+      "roles"
     )
 
-    user.roles.forEach(async (element) => {
-      await Role.deleteOne({ _id: element }).exec()
-      console.log(element)
+    let userRoles = []
+    user.roles.forEach((element) => {
+      if (element.team.equals(req.params.id)) {
+        userRoles.push(element._id)
+      }
     })
-    // await Role.deleteOne({ _id: req.body.member }).exec()
+
+    await User.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $pull: { roles: { $in: userRoles } } }
+    )
+    await Role.deleteMany({ _id: { $in: userRoles } }).exec()
+
     res.json(true)
   } catch (err) {
+    console.log(err.message)
     res.json({ error: err.message })
   }
 }

@@ -129,6 +129,10 @@ const show = async (req, res) => {
               model: "User",
             },
             {
+              path: "team",
+              model: "Team",
+            },
+            {
               path: "comments",
               model: "Comment",
               populate: { path: "member", model: "User" },
