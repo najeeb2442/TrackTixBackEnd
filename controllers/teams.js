@@ -179,7 +179,11 @@ const removeMember = async (req, res) => {
     // if (condition) {
     await Ticket.updateMany(
       {
-        $and: [{ _id: { $in: team.tickets } }, { member: { $size: 0 } }],
+        $and: [
+          { _id: { $in: team.tickets } },
+          { member: { $size: 0 } },
+          { status: { $not: { status: "Complete" } } },
+        ],
       },
       {
         $set: { status: "Pending" },
