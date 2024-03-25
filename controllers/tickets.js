@@ -209,6 +209,21 @@ const addComment = async (req, res) => {
   }
 }
 
+const deleteComment = async (req, res) => {
+  try {
+    const ticketId = await Ticket.findById(req.params.id)
+    await Ticket.findByIdAndUpdate(
+      ticketId,
+      { $pull: { comments: req.params.commentId } },
+      { new: true }
+    )
+    await Comment.findOneAndDelete({ _id: req.params.commentId })
+    res.send(ticketId)
+  } catch (error) {
+    console.log('error in delete comment controller', error)
+  }
+}
+
 module.exports = {
   deleteTicket,
   updateTicket,
@@ -217,5 +232,6 @@ module.exports = {
   leaveTicket,
   index,
   show,
-  addComment
+  addComment,
+  deleteComment
 }
