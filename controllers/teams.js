@@ -150,14 +150,13 @@ const removeMember = async (req, res) => {
 
     const team = await Team.findOneAndUpdate(
       { _id: req.params.teamId },
-      { $pull: { members: req.params.userId }, $set: { roles: [] } }
+      { $pull: { members: req.params.userId } }
     )
 
     await User.findOneAndUpdate(
       { _id: req.params.userId },
       {
-        $pull: { teams: req.params.teamId },
-        $pull: { tickets: { $in: team.tickets } },
+        $pull: { teams: req.params.teamId, tickets: { $in: team.tickets } },
       }
     )
 
