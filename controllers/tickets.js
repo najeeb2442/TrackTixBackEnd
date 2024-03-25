@@ -1,8 +1,8 @@
-const Ticket = require('../models/ticket')
-const User = require('../models/user')
-const Team = require('../models/team')
-const Notification = require('../models/notification')
-const Comment = require('../models/comment')
+const Ticket = require("../models/ticket")
+const User = require("../models/user")
+const Team = require("../models/team")
+const Notification = require("../models/notification")
+const Comment = require("../models/comment")
 
 const index = async (req, res) => {
   //done
@@ -35,26 +35,26 @@ const index = async (req, res) => {
     // ])
 
     let teams = await Team.findOne({ _id: req.params.id }).populate({
-      path: 'tickets',
+      path: "tickets",
       populate: [
         {
-          path: 'member',
-          model: 'User'
+          path: "member",
+          model: "User",
         },
         {
-          path: 'createdBy',
-          model: 'User'
+          path: "createdBy",
+          model: "User",
         },
         {
-          path: 'solvedBy',
-          model: 'User'
+          path: "solvedBy",
+          model: "User",
         },
         {
-          path: 'comments',
-          model: 'Comment',
-          populate: { path: 'member', model: 'User' }
-        }
-      ]
+          path: "comments",
+          model: "Comment",
+          populate: { path: "member", model: "User" },
+        },
+      ],
     })
     // console.log("ee")
     res.json(teams.tickets)
@@ -68,13 +68,13 @@ const show = async (req, res) => {
   // salman said it works fine
   try {
     const ticket = await Ticket.findById(req.params.id)
-      .populate(['member', 'createdBy', 'solvedBy'])
+      .populate(["member", "createdBy", "solvedBy"])
       .populate({
-        path: 'comments',
+        path: "comments",
         populate: {
-          path: 'member',
-          model: 'User'
-        }
+          path: "member",
+          model: "User",
+        },
       })
     res.json(ticket)
   } catch (err) {
@@ -87,40 +87,54 @@ const show = async (req, res) => {
 const newTicket = async (req, res) => {
   //done
   try {
-    let newTicket = await Ticket.create({ ...req.body, logs: req.body })
+    const tic = req.body
+    tic.status = "Pending"
+
+    //try salman idea
+    let newTicket = await Ticket.create({
+      ...req.body,
+      logs: { ...req.body, timestamp: new Date() },
+    })
 
     const team = await Team.findByIdAndUpdate(req.params.id, {
-      $push: { tickets: newTicket._id }
+      $push: { tickets: newTicket._id },
     })
 
     const note = {
       content: `${team.name}: ${newTicket.subject} Has Been Created.`,
       member: team.manager,
       ticket: newTicket._id,
-      team: req.params.id
+      team: req.params.id,
     }
     const t = await Notification.create(note)
     res.json(newTicket)
   } catch (err) {
+    console.log(err.message)
     res.json({ error: err.message })
   }
 }
 
 const updateTicket = async (req, res) => {
   try {
-    // req.body.status = true
+    req.body.status = "Processing"
+    if (req.body.solvedBy) {
+      req.body.status = "Complete"
+    }
     let ticket = await Ticket.findByIdAndUpdate(req.params.id, {
       ...req.body,
-      logs: req.body
+
+      member: req.body.member,
+      // status: "Processing",
+      $push: { logs: { timestamp: new Date(), status: req.body.status } },
     })
-    // ticket = await Ticket.findByIdAndUpdate(req.params.id, { logs: req.body })
+
     const team = await Team.findOne({ _id: req.query.teamId })
 
     let note = {
       content: `${team.name}: ${ticket.subject} Has Been Updated.`,
       member: ticket.createdBy,
       ticket: req.params.id,
-      team: team._id
+      team: team._id,
     }
 
     if (req.body.solvedBy) {
@@ -128,7 +142,7 @@ const updateTicket = async (req, res) => {
         content: `${team.name}: ${ticket.subject} Has Been Solved.`,
         member: ticket.createdBy,
         ticket: req.params.id,
-        team: team._id
+        team: team._id,
       }
     }
 
@@ -139,6 +153,7 @@ const updateTicket = async (req, res) => {
 
     res.json(ticket)
   } catch (err) {
+    console.log(err.message)
     res.json({ error: err.message })
   }
 }
@@ -151,11 +166,16 @@ const assignTicket = async (req, res) => {
     )
     await Ticket.updateOne(
       { _id: req.params.id },
-      { $push: { member: req.body.member }, status: 'Processing' }
+      {
+        member: req.body.member,
+        status: "Processing",
+        $push: { logs: { timestamp: new Date(), status: "Processing" } },
+      }
     )
 
-    res.json('ticket has been assign successfully')
+    res.json("ticket has been assign successfully")
   } catch (err) {
+    console.log(err.message)
     res.json({ error: err.message })
   }
 }
@@ -168,13 +188,13 @@ const leaveTicket = async (req, res) => {
 
     const ticket = await Ticket.updateOne(
       { _id: req.params.id },
-      { $pull: { member: req.body.member }, status: 'Pending' }
+      { $pull: { member: req.body.member }, status: "Pending" }
     )
     if (ticket.member.length != 0) {
-      await Ticket.updateOne({ _id: req.params.id }, { status: 'Processing' })
+      await Ticket.updateOne({ _id: req.params.id }, { status: "Processing" })
     }
 
-    res.json('ticket has been removed successfully')
+    res.json("ticket has been removed successfully")
   } catch (err) {
     res.json({ error: err.message })
   }
@@ -220,7 +240,7 @@ const deleteComment = async (req, res) => {
     await Comment.findOneAndDelete({ _id: req.params.commentId })
     res.send(ticketId)
   } catch (error) {
-    console.log('error in delete comment controller', error)
+    console.log("error in delete comment controller", error)
   }
 }
 
@@ -233,5 +253,5 @@ module.exports = {
   index,
   show,
   addComment,
-  deleteComment
+  deleteComment,
 }
