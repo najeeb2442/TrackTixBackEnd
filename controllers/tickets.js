@@ -65,10 +65,17 @@ const index = async (req, res) => {
 
 const show = async (req, res) => {
   // done
+  // salman said it works fine
   try {
     const ticket = await Ticket.findById(req.params.id)
-      .populate(['member', 'createdBy', 'solvedBy', 'comments'])
-      .populate({ path: 'comments.member', model: 'User' })
+      .populate(['member', 'createdBy', 'solvedBy'])
+      .populate({
+        path: 'comments',
+        populate: {
+          path: 'member',
+          model: 'User'
+        }
+      })
     res.json(ticket)
   } catch (err) {
     res.json({ error: err.message })
@@ -89,7 +96,8 @@ const newTicket = async (req, res) => {
     const note = {
       content: `${team.name}: ${newTicket.subject} Has Been Created.`,
       member: team.manager,
-      ticket: newTicket._id
+      ticket: newTicket._id,
+      team: req.params.id
     }
     const t = await Notification.create(note)
     res.json(newTicket)
@@ -111,14 +119,16 @@ const updateTicket = async (req, res) => {
     let note = {
       content: `${team.name}: ${ticket.subject} Has Been Updated.`,
       member: ticket.createdBy,
-      ticket: req.params.id
+      ticket: req.params.id,
+      team: team._id
     }
 
     if (req.body.solvedBy) {
       note = {
         content: `${team.name}: ${ticket.subject} Has Been Solved.`,
         member: ticket.createdBy,
-        ticket: req.params.id
+        ticket: req.params.id,
+        team: team._id
       }
     }
 
@@ -141,23 +151,29 @@ const assignTicket = async (req, res) => {
     )
     await Ticket.updateOne(
       { _id: req.params.id },
-      { $push: { member: req.body.member } }
+      { $push: { member: req.body.member }, status: 'Processing' }
     )
+
     res.json('ticket has been assign successfully')
   } catch (err) {
     res.json({ error: err.message })
   }
 }
-const removeTicket = async (req, res) => {
+const leaveTicket = async (req, res) => {
   try {
     const user = await User.updateOne(
       { _id: req.body.member },
       { $pull: { tickets: req.params.id } }
     )
-    await Ticket.updateOne(
+
+    const ticket = await Ticket.updateOne(
       { _id: req.params.id },
-      { $pull: { member: req.body.member } }
+      { $pull: { member: req.body.member }, status: 'Pending' }
     )
+    if (ticket.member.length != 0) {
+      await Ticket.updateOne({ _id: req.params.id }, { status: 'Processing' })
+    }
+
     res.json('ticket has been removed successfully')
   } catch (err) {
     res.json({ error: err.message })
@@ -185,7 +201,7 @@ module.exports = {
   updateTicket,
   newTicket,
   assignTicket,
-  removeTicket,
+  leaveTicket,
   index,
   show
 }

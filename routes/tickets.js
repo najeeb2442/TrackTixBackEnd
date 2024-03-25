@@ -36,7 +36,7 @@ router.put(
   '/:id/remove',
   middleware.stripToken,
   middleware.verifyToken,
-  ticketsController.removeTicket
+  ticketsController.leaveTicket
 )
 // create a ticket
 router.post(

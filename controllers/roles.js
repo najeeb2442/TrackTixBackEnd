@@ -60,9 +60,10 @@ const deleteRole = async (req, res) => {
 
 const assignRole = async (req, res) => {
   try {
-    await User.updateOne({ _id: req.params.id }, { $push: { roles: req.body } })
+    const role = await Role.create(req.body)
+    await User.updateOne({ _id: req.params.id }, { $push: { roles: role._id } })
     // res.json(true)
-    res.json("roll/s was assigned successfully")
+    res.json("role was assigned successfully")
   } catch (err) {
     res.json({ error: err.message })
   }
