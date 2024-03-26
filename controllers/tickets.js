@@ -107,6 +107,8 @@ const newTicket = async (req, res) => {
       team: req.params.id,
     }
     const t = await Notification.create(note)
+    await User.findByIdAndUpdate(team.manager, t._id)
+
     res.json(newTicket)
   } catch (err) {
     console.log(err.message)
@@ -146,10 +148,17 @@ const updateTicket = async (req, res) => {
       }
     }
 
-    const notification = await Notification.create(note)
+    let notification = await Notification.create(note)
+    await User.findByIdAndUpdate(ticket.createdBy, {
+      $push: { notifications: notification._id },
+    })
 
     note.member = team.manager
-    await Notification.create(note)
+    notification = await Notification.create(note)
+
+    await User.findByIdAndUpdate(note.member, {
+      $push: { notifications: notification._id },
+    })
 
     res.json(ticket)
   } catch (err) {
