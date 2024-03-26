@@ -86,34 +86,38 @@ const show = async (req, res) => {
 
 const newTicket = async (req, res) => {
   //done
-  try {
-    const tic = req.body
-    tic.status = "Pending"
+  console.log(req.body)
+  // console.log(req.files)
+  // console.log(req.body.attachments[0])
 
-    //try salman idea
-    let newTicket = await Ticket.create({
-      ...req.body,
-      logs: { ...req.body, timestamp: new Date() },
-    })
+  // try {
+  //   const tic = req.body
+  //   tic.status = "Pending"
 
-    const team = await Team.findByIdAndUpdate(req.params.id, {
-      $push: { tickets: newTicket._id },
-    })
+  //   //try salman idea
+  //   let newTicket = await Ticket.create({
+  //     ...req.body,
+  //     logs: { ...req.body, timestamp: new Date() },
+  //   })
 
-    const note = {
-      content: `${team.name}: ${newTicket.subject} Has Been Created.`,
-      member: team.manager,
-      ticket: newTicket._id,
-      team: req.params.id,
-    }
-    const t = await Notification.create(note)
-    await User.findByIdAndUpdate(team.manager, t._id)
+  //   const team = await Team.findByIdAndUpdate(req.params.id, {
+  //     $push: { tickets: newTicket._id },
+  //   })
 
-    res.json(newTicket)
-  } catch (err) {
-    console.log(err.message)
-    res.json({ error: err.message })
-  }
+  //   const note = {
+  //     content: `${team.name}: ${newTicket.subject} Has Been Created.`,
+  //     member: team.manager,
+  //     ticket: newTicket._id,
+  //     team: req.params.id,
+  //   }
+  //   const t = await Notification.create(note)
+  //   await User.findByIdAndUpdate(team.manager, t._id)
+
+  //   res.json(newTicket)
+  // } catch (err) {
+  //   console.log(err.message)
+  //   res.json({ error: err.message })
+  // }
 }
 
 const updateTicket = async (req, res) => {

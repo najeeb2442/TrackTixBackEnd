@@ -29,7 +29,11 @@ app.use(express.static(path.join(__dirname, "public")))
 app.use(cors())
 
 // Set up a route for file uploads
-app.post("/upload", upload.single("file"), (req, res) => {
+app.post("/upload", upload.array("file"), (req, res) => {
+  // console.log(req.file)
+  // console.log(req.body.file)
+  console.log(req.files)
+
   // Handle the uploaded file
   res.json({ message: "File uploaded successfully!" })
 })
@@ -42,7 +46,7 @@ app.get(
     // File
     const fileName = req.params.file
     // const filePath = path.join(__dirname, "./public/images/", fileName)
-    const filePath = path.join("./public/images/", fileName)
+    const filePath = path.join("./public/data/uploads/", fileName)
 
     // File options
     const options = {

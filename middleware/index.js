@@ -22,7 +22,7 @@ const createToken = (payload) => {
 
 const verifyToken = (req, res, next) => {
   const { token } = res.locals
-
+  req.body.fileNames
   try {
     let payload = jwt.verify(token, APP_SECERT)
     if (payload) {

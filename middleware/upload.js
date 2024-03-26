@@ -8,6 +8,13 @@ const storage = multer.diskStorage({
     // cb(null, "./public/images/")
   },
   filename: (req, file, cb) => {
+    console.log(file)
+    // const fileN =
+    // Date.now() +
+    // "-" +
+    // Math.round(Math.random() * 1e9) +
+    // "-" +
+    // file.originalname
     cb(
       null,
       Date.now() +
@@ -16,6 +23,8 @@ const storage = multer.diskStorage({
         "-" +
         file.originalname
     )
+    // req.body.fileNames.push(fileName)
+    // req.body.subject = "heeeeheee"
   },
 })
 
