@@ -35,6 +35,8 @@ const signIn = async (req, res) => {
         // needs changes
         id: user.id,
         email: user.email,
+        name: user.name,
+        avatar: user.avatar,
         // role: user.role,
       }
       let token = middleware.createToken(payload)
@@ -42,7 +44,6 @@ const signIn = async (req, res) => {
       return res.send({ user: payload, token })
     }
     res.json({ error: "Your email and/or password do not match" })
-    // res.status(401).send({ status: "Error", msg: "Unauthorized" })
   } catch (error) {
     console.log(error)
     res

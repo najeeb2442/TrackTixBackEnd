@@ -8,33 +8,6 @@ const cloudinary = require("../utils/cloudinary")
 const index = async (req, res) => {
   //done
   try {
-    //   .populate(["member", "createdBy", "solvedBy"]);
-
-    // let tickets = await Ticket.find({ _id: req.params.id }).populate([
-    //   {
-    //     path: "member",
-    //     model: "User",
-    //   },
-    //   {
-    //     path: "createdBy",
-    //     model: "User",
-    //   },
-    //   {
-    //     path: "solvedBy",
-    //     model: "User",
-    //   },
-    //   // {
-    //   //   path: "logs",
-    //   //   model: "User",
-    //   //   populate:{}
-    //   // },
-    //   {
-    //     path: "comments",
-    //     model: "Comment",
-    //     populate: { path: "member", model: "User" },
-    //   },
-    // ])
-
     let teams = await Team.findOne({ _id: req.params.id }).populate({
       path: "tickets",
       populate: [
@@ -57,7 +30,6 @@ const index = async (req, res) => {
         },
       ],
     })
-    // console.log("ee")
     res.json(teams.tickets)
   } catch (err) {
     res.json({ error: err.message })
@@ -87,26 +59,9 @@ const show = async (req, res) => {
 
 const newTicket = async (req, res) => {
   //done
-  console.log(req.body)
-  console.log(req.files)
-
-  // let attachments = req.files.map((file) => file.filename)
-  // console.log(attachments)
-  // req.body.attachments = attachments
-  // console.log(req.body.attachments)
-  // console.log(req.body.attachments[0])
 
   try {
-    // needs to modify this
-    // await Promise.all(
-    //   req.body.orderItems.map(async (item) => {
-    //     const newOrderItem = await OrderItem.create(item)
-    //     newOrderItems.push(newOrderItem)
-    //   })
-    // )
-
     let attachments = []
-    // = req.files.map((file) => file.filename)
 
     await Promise.all(
       req.files.map(async (file) => {
