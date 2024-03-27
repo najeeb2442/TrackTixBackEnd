@@ -112,9 +112,7 @@ const newTicket = async (req, res) => {
       req.files.map(async (file) => {
         const result = await cloudinary.uploader.upload(
           file.path,
-          // request.file.buffer.toString('latin1'),
           { folder: "attachments" },
-          // { public_id: "olympic_flag" },
           function (error, result) {
             console.log("result")
             console.log(result)
@@ -130,12 +128,6 @@ const newTicket = async (req, res) => {
         console.log("result after pushing " + result)
       })
     )
-
-    // {
-    //   public_id: result.public_id,
-    //   url: result.url,
-    //   name: req.files[0].originalname,
-    // },
 
     const tic = req.body
     tic.status = "Pending"
@@ -190,7 +182,7 @@ const newTicket = async (req, res) => {
 
 const updateTicket = async (req, res) => {
   try {
-    req.body.status = "Processing"
+    // req.body.status = "Processing"
     if (req.body.solvedBy) {
       req.body.status = "Complete"
     }
@@ -199,7 +191,11 @@ const updateTicket = async (req, res) => {
 
       member: req.body.member,
       // status: "Processing",
-      $push: { logs: { timestamp: new Date(), status: req.body.status } },
+      // $push: { logs: { timestamp: new Date(), status: req.body.status } },
+    })
+
+    ticket = await Ticket.findByIdAndUpdate(req.params.id, {
+      $push: { logs: { timestamp: new Date(), status: ticket.status } },
     })
 
     const team = await Team.findOne({ _id: req.query.teamId })
@@ -248,7 +244,6 @@ const assignTicket = async (req, res) => {
     await Ticket.updateOne(
       { _id: req.params.id },
       {
-        member: req.body.member,
         status: "Processing",
         $push: {
           logs: { timestamp: new Date(), status: "Processing" },

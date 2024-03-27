@@ -2,6 +2,7 @@ var express = require("express")
 var router = express.Router()
 const teamsController = require("../controllers/teams.js")
 const middleware = require("../middleware")
+const upload = require("../middleware/upload")
 
 //send all teams
 router.get(
@@ -29,6 +30,7 @@ router.post(
   "/",
   middleware.stripToken,
   middleware.verifyToken,
+  upload.single("avatar"),
   teamsController.newTeam
 )
 // delete a team
