@@ -85,8 +85,8 @@ app.use("/roles", rolesRouter)
 app.use("/notifications", notificationsRouter)
 app.use("/invites", invitesRouter)
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// })
 
 module.exports = app

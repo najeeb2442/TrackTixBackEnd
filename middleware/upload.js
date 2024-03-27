@@ -4,11 +4,11 @@ const multer = require("multer")
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "./public/data/uploads/")
-    // cb(null, "../uploads/")
-    // cb(null, "./public/images/")
+    //   // cb(null, "../uploads/")
+    //   // cb(null, "./public/images/")
   },
   filename: (req, file, cb) => {
-    console.log(file)
+    // console.log(file)
     // const fileN =
     // Date.now() +
     // "-" +
@@ -17,11 +17,11 @@ const storage = multer.diskStorage({
     // file.originalname
     cb(
       null,
-      Date.now() +
-        "-" +
-        Math.round(Math.random() * 1e9) +
-        "-" +
-        file.originalname
+      // Date.now() + "-"
+      //  +
+      // Math.round(Math.random() * 1e9) +
+      // "-" +
+      file.originalname
     )
     // req.body.fileNames.push(fileName)
     // req.body.subject = "heeeeheee"

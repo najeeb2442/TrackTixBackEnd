@@ -3,6 +3,7 @@ const User = require("../models/user")
 const Team = require("../models/team")
 const Notification = require("../models/notification")
 const Comment = require("../models/comment")
+const cloudinary = require("../utils/cloudinary")
 
 const index = async (req, res) => {
   //done
@@ -87,37 +88,84 @@ const show = async (req, res) => {
 const newTicket = async (req, res) => {
   //done
   console.log(req.body)
-  // console.log(req.files)
+  console.log(req.files)
+
+  // let attachments = req.files.map((file) => file.filename)
+  // console.log(attachments)
+  // req.body.attachments = attachments
+  // console.log(req.body.attachments)
   // console.log(req.body.attachments[0])
 
-  // try {
-  //   const tic = req.body
-  //   tic.status = "Pending"
+  try {
+    // needs to modify this
+    // await Promise.all(
+    //   req.body.orderItems.map(async (item) => {
+    //     const newOrderItem = await OrderItem.create(item)
+    //     newOrderItems.push(newOrderItem)
+    //   })
+    // )
 
-  //   //try salman idea
-  //   let newTicket = await Ticket.create({
-  //     ...req.body,
-  //     logs: { ...req.body, timestamp: new Date() },
-  //   })
+    let attachments = []
+    // = req.files.map((file) => file.filename)
 
-  //   const team = await Team.findByIdAndUpdate(req.params.id, {
-  //     $push: { tickets: newTicket._id },
-  //   })
+    await Promise.all(
+      req.files.map(async (file) => {
+        const result = await cloudinary.uploader.upload(
+          file.path,
+          // request.file.buffer.toString('latin1'),
+          { folder: "attachments" },
+          // { public_id: "olympic_flag" },
+          function (error, result) {
+            console.log("result")
+            console.log(result)
+            console.log("error")
+            console.log(error)
+          }
+        )
+        attachments.push({
+          public_id: result.public_id,
+          url: result.url,
+          name: file.originalname,
+        })
+        console.log("result after pushing " + result)
+      })
+    )
 
-  //   const note = {
-  //     content: `${team.name}: ${newTicket.subject} Has Been Created.`,
-  //     member: team.manager,
-  //     ticket: newTicket._id,
-  //     team: req.params.id,
-  //   }
-  //   const t = await Notification.create(note)
-  //   await User.findByIdAndUpdate(team.manager, t._id)
+    // {
+    //   public_id: result.public_id,
+    //   url: result.url,
+    //   name: req.files[0].originalname,
+    // },
 
-  //   res.json(newTicket)
-  // } catch (err) {
-  //   console.log(err.message)
-  //   res.json({ error: err.message })
-  // }
+    const tic = req.body
+    tic.status = "Pending"
+
+    //try salman idea
+    let newTicket = await Ticket.create({
+      ...req.body,
+      attachments,
+
+      logs: { ...req.body, timestamp: new Date() },
+    })
+
+    const team = await Team.findByIdAndUpdate(req.params.id, {
+      $push: { tickets: newTicket._id },
+    })
+
+    const note = {
+      content: `${team.name}: ${newTicket.subject} Has Been Created.`,
+      member: team.manager,
+      ticket: newTicket._id,
+      team: req.params.id,
+    }
+    const t = await Notification.create(note)
+    await User.findByIdAndUpdate(team.manager, t._id)
+
+    res.json(newTicket)
+  } catch (err) {
+    console.log(err.message)
+    res.json({ error: err.message })
+  }
 }
 
 const updateTicket = async (req, res) => {
@@ -182,7 +230,10 @@ const assignTicket = async (req, res) => {
       {
         member: req.body.member,
         status: "Processing",
-        $push: { logs: { timestamp: new Date(), status: "Processing" } },
+        $push: {
+          logs: { timestamp: new Date(), status: "Processing" },
+          member: req.body.member,
+        },
       }
     )
     res.json("ticket has been assign successfully")

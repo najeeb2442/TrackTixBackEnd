@@ -20,7 +20,13 @@ const ticketSchema = new Schema(
     createdBy: { type: Schema.Types.ObjectId, ref: "User", required: true },
     solvedBy: { type: Schema.Types.ObjectId, ref: "User" },
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-    attachments: [{ type: String }],
+    attachments: [
+      {
+        public_id: { type: String, required: true },
+        url: { type: String, required: true },
+        name: { type: String, required: true },
+      },
+    ],
     due: { type: Date },
     logs: [{ type: Object }],
     team: { type: Schema.Types.ObjectId, ref: "Team" },
