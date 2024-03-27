@@ -2,7 +2,8 @@ const Team = require("../models/team")
 const User = require("../models/user")
 const Role = require("../models/role.js")
 const Ticket = require("../models/ticket.js")
-const team = require("../models/team")
+// const team = require("../models/team")
+const cloudinary = require("../utils/cloudinary")
 
 const index = async (req, res) => {
   //done
@@ -73,7 +74,21 @@ const show = async (req, res) => {
 const newTeam = async (req, res) => {
   //done
   try {
-    const team = await Team.create(req.body)
+    console.log(req.body)
+    // console.log(req.files)
+    console.log(req.file)
+    const result = await cloudinary.uploader.upload(
+      req.file.path,
+      { folder: "avatar", height: 200, width: 200, crop: "fill" },
+      function (error, result) {
+        console.log("result")
+        console.log(result)
+        console.log("error")
+        console.log(error)
+      }
+    )
+
+    const team = await Team.create({ ...req.body, avatar: result.url })
     const role = await Role.create({ name: "Manager", team: team._id })
     const user = await User.findById(req.body.manager)
     user.teams.push(team._id)
@@ -82,6 +97,24 @@ const newTeam = async (req, res) => {
     team.save()
     user.save()
     res.send("Team Created")
+
+    const fs = require("fs")
+
+    console.log(req.file.filename)
+
+    // Asynchronously delete a file
+    fs.unlink(`./public/data/uploads/${req.file.filename}`, (err) => {
+      if (err) {
+        // Handle specific error if any
+        if (err.code === "ENOENT") {
+          console.error("File does not exist.")
+        } else {
+          throw err
+        }
+      } else {
+        console.log("File deleted!")
+      }
+    })
 
     // let newTeam = await Team.create(req.body)
     // await User.updateOne(
@@ -92,6 +125,7 @@ const newTeam = async (req, res) => {
 
     // res.json(newTeam)
   } catch (err) {
+    console.log(err.message)
     res.json({ error: err.message })
   }
 }
