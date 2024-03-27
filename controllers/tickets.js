@@ -161,6 +161,26 @@ const newTicket = async (req, res) => {
     const t = await Notification.create(note)
     await User.findByIdAndUpdate(team.manager, t._id)
 
+    const fs = require("fs")
+
+    await Promise.all(
+      attachments.map(async (file) => {
+        // Asynchronously delete a file
+        fs.unlink(`./public/data/uploads/${file.name}`, (err) => {
+          if (err) {
+            // Handle specific error if any
+            if (err.code === "ENOENT") {
+              console.error("File does not exist.")
+            } else {
+              throw err
+            }
+          } else {
+            console.log("File deleted!")
+          }
+        })
+      })
+    )
+
     res.json(newTicket)
   } catch (err) {
     console.log(err.message)
