@@ -150,7 +150,7 @@ const updateTicket = async (req, res) => {
     })
 
     ticket = await Ticket.findByIdAndUpdate(req.params.id, {
-      $push: { logs: { timestamp: new Date(), status: ticket.status } },
+      $push: { logs: { timestamp: new Date(), status: req.body.status } },
     })
 
     const team = await Team.findOne({ _id: req.query.teamId })
