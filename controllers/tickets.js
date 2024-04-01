@@ -75,11 +75,19 @@ const newTicket = async (req, res) => {
             console.log(error)
           }
         )
+        const secureUrl = result.url.replace(/^http:/, "https:")
+
         attachments.push({
           public_id: result.public_id,
-          url: result.url,
+          url: secureUrl,
           name: file.originalname,
         })
+
+        // attachments.push({
+        //   public_id: result.public_id,
+        //   url: result.url,
+        //   name: file.originalname,
+        // })
         console.log("result after pushing " + result)
       })
     )
